@@ -1,0 +1,6 @@
+core-icon {
+  color: red;
+}
+core-icon:hover {
+  fill: gold;
+}

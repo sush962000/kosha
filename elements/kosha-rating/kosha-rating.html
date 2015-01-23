@@ -1,0 +1,19 @@
+<link rel="import" href="../../bower_components/core-icons/core-icons.html">
+
+<polymer-element name="kosha-rating" attributes="value">
+  <template>
+    <link rel="stylesheet" href="kosha-rating.css">
+    <core-icon icon="grade"></core-icon>
+    <core-icon icon="grade"></core-icon>
+    <core-icon icon="grade"></core-icon>
+    <core-icon icon="grade"></core-icon>
+    <core-icon icon="grade"></core-icon>
+  </template>
+  <script>
+    Polymer('kosha-rating', {
+      created: function() {
+        this.value = 0;
+      }
+    });
+  </script>
+</polymer-element>

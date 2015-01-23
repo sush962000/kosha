@@ -1,0 +1,19 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="kosha-card" attributes="restaurant">
+  <template>
+    <link rel="stylesheet" href="kosha-card.css">
+    <div class="container">
+      <div class="name">{{restaurant.name}}</div>
+      <div class="cuisine">{{restaurant.cuisine}}</div>
+      <div class="rating">{{restaurant.rating}}</div>
+    </div>
+  </template>
+  <script>
+    Polymer('kosha-card', {
+      created: function() {
+        this.restaurant = {};
+      }
+    });
+  </script>
+</polymer-element>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+<title>kosha</title>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+<style>
+  html, body {
+    font-family: 'RobotoDraft', sans-serif;
+  }
+</style>
+
+<script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+
+<link rel="import" href="bower_components/font-roboto/roboto.html">
+<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="elements/elements.html">
+</head>
+
+<body fullbleed layout vertical unresolved>
+  <core-header-panel flex>
+    <core-toolbar>
+      <core-icon icon="store"></core-icon>
+      <div flex>Kosha</div>
+      <core-icon-button icon="search"></core-icon-button>
+      <core-icon-button icon="account-box"></core-icon-button>
+      <core-icon-button icon="more-vert"></core-icon-button>
+    </core-toolbar>
+    <div horizontal layout>
+      <kosha-tile restaurant='{"name": "Frasca", "cuisine": "Italian", "rating": 3.5}'></kosha-tile>
+    </div>
+  </core-header-panel>
+</body>
+
+</html>

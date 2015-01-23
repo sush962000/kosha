@@ -1,0 +1,13 @@
+{
+  "name": "kosha",
+  "version": "0.0.0",
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.2",
+    "core-icon": "Polymer/core-icon#~0.5.2",
+    "paper-shadow": "Polymer/paper-shadow#~0.5.2",
+    "font-roboto": "Polymer/font-roboto#~0.5.2",
+    "core-scaffold": "Polymer/core-scaffold#~0.5.2",
+    "paper-item": "Polymer/paper-item#~0.5.2",
+    "core-menu": "Polymer/core-menu#~0.5.2"
+  }
+}
