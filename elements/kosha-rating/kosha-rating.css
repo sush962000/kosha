@@ -1,6 +1,9 @@
-.filled {
+.filled-system {
   color: red;
 }
+.filled-user {
+  color: gold;
+}
 .empty {
-  color: gray;
+  color: lightgray;
 }

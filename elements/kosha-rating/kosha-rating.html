@@ -1,32 +1,57 @@
 <link rel="import" href="../../bower_components/core-icons/core-icons.html">
 
-<polymer-element name="kosha-rating" attributes="value">
+<polymer-element name="kosha-rating" attributes="value user">
   <template>
     <link rel="stylesheet" href="kosha-rating.css">
     <div>
       <template repeat="{{i in ratings}}">
-        <core-icon icon="grade" class="{{i <= index ? 'filled' : 'empty'}}"></core-icon>
+        <core-icon
+            icon="grade"
+            class="{{i <= index ? filled : 'empty'}}"
+            on-mouseenter={{onMouseEnter}}
+            on-mouseleave={{onMouseLeave}}
+            on-tap={{onTap}}>
+        </core-icon>
       </template>
     </div>
   </template>
   <script>
     Polymer('kosha-rating', {
+      value: 1, // [1, 5].
+      user: false, // True if user rated.
+      index: 0, // [0, 4].
+      filled: 'filled-system',
       ratingToIndex: function(rating) {
         return Math.round(rating) - 1;
       },
       indexToRating: function(index) {
         return index + 1;
       },
+      initParams: function() {
+        this.index = this.ratingToIndex(this.value);
+        this.filled = this.user ? 'filled-user' : 'filled-system';
+      },
       created: function() {
-        this.value = 0;
-        this.index = 0;
+        // Initialize arrays and objects.
         this.ratings = [];
       },
       ready: function() {
-        this.index = this.ratingToIndex(this.value);
         for (var i = 0; i < 5; ++i) {
           this.ratings.push(i);
         }
+        this.initParams();
+      },
+      onMouseEnter: function(event, detail, sender) {
+        this.index = event.target.templateInstance.model.i;
+        this.filled = 'filled-user';
+      },
+      onMouseLeave: function(event, detail, sender) {
+        this.initParams();
+      },
+      onTap: function(event, detail, sender) {
+        this.value = this.indexToRating(event.target.templateInstance.model.i);
+        this.user = true;
+        this.initParams();
       }
     });
   </script>
