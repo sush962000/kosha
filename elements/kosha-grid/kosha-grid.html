@@ -1,0 +1,21 @@
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../kosha-tile/kosha-tile.html">
+
+<polymer-element name="kosha-grid" attributes="url">
+  <template>
+    <link rel="stylesheet" href="kosha-grid.css">
+    <core-ajax auto url="{{url}}" handleAs="json" response="{{response}}"></core-ajax>
+    <div class="container">
+      <template repeat="{{item in response.items}}">
+        <kosha-tile restaurant="{{item}}"></kosha-tile>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer('kosha-grid', {
+      created: function() {
+        this.url = "";
+      }
+    });
+  </script>
+</polymer-element>
