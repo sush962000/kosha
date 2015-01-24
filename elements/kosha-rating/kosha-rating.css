@@ -1,6 +1,6 @@
-core-icon {
+.filled {
   color: red;
 }
-core-icon:hover {
-  fill: gold;
+.empty {
+  color: gray;
 }

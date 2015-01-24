@@ -3,16 +3,30 @@
 <polymer-element name="kosha-rating" attributes="value">
   <template>
     <link rel="stylesheet" href="kosha-rating.css">
-    <core-icon icon="grade"></core-icon>
-    <core-icon icon="grade"></core-icon>
-    <core-icon icon="grade"></core-icon>
-    <core-icon icon="grade"></core-icon>
-    <core-icon icon="grade"></core-icon>
+    <div>
+      <template repeat="{{i in ratings}}">
+        <core-icon icon="grade" class="{{i <= index ? 'filled' : 'empty'}}"></core-icon>
+      </template>
+    </div>
   </template>
   <script>
     Polymer('kosha-rating', {
+      ratingToIndex: function(rating) {
+        return Math.round(rating) - 1;
+      },
+      indexToRating: function(index) {
+        return index + 1;
+      },
       created: function() {
         this.value = 0;
+        this.index = 0;
+        this.ratings = [];
+      },
+      ready: function() {
+        this.index = this.ratingToIndex(this.value);
+        for (var i = 0; i < 5; ++i) {
+          this.ratings.push(i);
+        }
       }
     });
   </script>
