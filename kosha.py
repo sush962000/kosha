@@ -1,8 +1,13 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response, request
 import recommender
+import json
 
 app = Flask(__name__)
 app.debug = True
+
+restaurants = []
+with open("business_data.json") as f:
+  restaurants = [json.loads(line) for line in f.readlines()]
 
 @app.route("/")
 def main():
@@ -10,10 +15,19 @@ def main():
 
 @app.route("/restaurants", methods=["GET"])
 def api_restaurants():
-  recommendations = recommender.get_recommendations()
+  #recommendations = recommender.get_recommendations()
+  recommendations = restaurants
   response = jsonify(items=recommendations)
   response.status_code = 200
   return response
 
+@app.route("/restaurants/<business_id>", methods=["PATCH"])
+def api_post_rating(business_id):
+  print business_id
+  print request.json
+  response = make_response()
+  response.status_code = 204
+  return response
+
 if __name__ == "__main__":
-  app.run()
+  app.run(host="0.0.0.0")

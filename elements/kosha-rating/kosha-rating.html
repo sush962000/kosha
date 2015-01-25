@@ -56,9 +56,10 @@
 
         // Send to server.
         var args = {
-            'url': '/restaurant/' + this.restaurant.business_id,
+            'url': '/restaurants/' + this.restaurant.business_id,
             'method': 'PATCH',
-            'body': '{"rating": 3}'
+            'headers': {'Content-Type': 'application/json'},
+            'body': JSON.stringify({'rating': this.restaurant.rating})
         };
         this.$.xhr.request(args);
       },
