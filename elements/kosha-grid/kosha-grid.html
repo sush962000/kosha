@@ -26,16 +26,15 @@
       responseRecieved: function(e) {
         this.restaurants = e.detail.response.items;
       },
-      ratingPosted: function(e) {
-        //console.log(e.type, e.detail);
+      ratingPosted: function(event, detail, sender) {
+        console.log(detail);
         // TODO: Update model.
       },
       ratingChanged: function(e) {
         // Send to server.
         var restaurant = e.target.templateInstance.model.restaurant;
-        console.log(restaurant.name, restaurant.rating);
         var args = {
-            'url': '/restaurants/' + restaurant.id,
+            'url': this.url + '/' + restaurant.id,
             'method': 'PATCH',
             'headers': {'Content-Type': 'application/json;charset=utf-8'},
             'body': JSON.stringify({rating: restaurant.rating}),
