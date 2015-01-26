@@ -52,14 +52,16 @@ def recommend_for_new_user(restaurant_id, restaurant, rating):
 
 
 def recommend_by_popularity(data):
-    m = gl.popularity_recommender.create(data, 'user', 'name', 'rating', verbose=False)
+    m = gl.popularity_recommender.create(data, 'user', 'id', 'rating', verbose=False)
     recommendations = m.recommend(k=10)
 
     recommendations_data = recommendations.to_dataframe()
     sorted_data = []
     for index, rows in recommendations_data.iterrows():
         if index >= 25: break
-        sorted_data.append({"name" : rows["name"], "rating" : rows["score"], "rank": rows["rank"]})
+        id = rows["id"]
+        name = data[data["id"] == id]["name"][0]
+        sorted_data.append({"id":id, "name":name, "rating" : rows["score"]})
     return sorted_data
 
     #(fig, ax) = plt.subplots(figsize=(10, 8))
@@ -82,9 +84,9 @@ def get_recommendations(data):
     return recommend_by_popularity(data)
 
 def main():
-    recommendations = get_recommendations()
+    data = load("restaurant_data.csv")
+    recommendations = get_recommendations(data)
     print recommendations
 
-
 if __name__ == '__main__':
-    get_recommendations()
+    main()

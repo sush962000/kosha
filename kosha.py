@@ -21,7 +21,7 @@ def api_restaurants():
 @app.route("/restaurants/<id>", methods=["PATCH"])
 def api_post_rating(id):
   print id
-  print request.json
+  rating = request.json["rating"]
   #recommender.add_new_data(id, rating)
   response = make_response()
   response.status_code = 204
