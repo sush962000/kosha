@@ -1,10 +1,8 @@
-<link rel="import" href="../../bower_components/core-ajax/core-xhr.html">
 <link rel="import" href="../../bower_components/core-icons/core-icons.html">
 
-<polymer-element name="kosha-rating" attributes="restaurant">
+<polymer-element name="kosha-rating" attributes="rating userRated">
   <template>
     <link rel="stylesheet" href="kosha-rating.css">
-    <core-xhr id="xhr"></core-xhr>
     <div>
       <template repeat="{{i in ratings}}">
         <core-icon
@@ -19,6 +17,8 @@
   </template>
   <script>
     Polymer('kosha-rating', {
+      rating: 1,
+      userRated: false,
       index: 0, // [0, 4].
       filled: 'filled-system',
       ratingToIndex: function(rating) {
@@ -28,12 +28,11 @@
         return index + 1;
       },
       initParams: function() {
-        this.index = this.ratingToIndex(this.restaurant.rating);
-        this.filled = this.restaurant.user_rated ? 'filled-user' : 'filled-system';
+        this.index = this.ratingToIndex(this.rating);
+        this.filled = this.userRated ? 'filled-user' : 'filled-system';
       },
       created: function() {
         // Initialize arrays and objects.
-        this.restaurant = {};
         this.ratings = [];
       },
       ready: function() {
@@ -42,29 +41,17 @@
         }
         this.initParams();
       },
-      onMouseEnter: function(event, detail, sender) {
+      onMouseEnter: function(event) {
         this.index = event.target.templateInstance.model.i;
         this.filled = 'filled-user';
       },
-      onMouseLeave: function(event, detail, sender) {
+      onMouseLeave: function(event) {
         this.initParams();
       },
-      onTap: function(event, detail, sender) {
-        this.restaurant.rating = this.indexToRating(event.target.templateInstance.model.i);
-        this.restaurant.user_rated = true;
+      onTap: function(event) {
+        this.userRated = true;
+        this.rating = this.indexToRating(event.target.templateInstance.model.i);
         this.initParams();
-
-        // Send to server.
-        var args = {
-            'url': '/restaurants/' + this.restaurant.business_id,
-            'method': 'PATCH',
-            'headers': {'Content-Type': 'application/json'},
-            'body': JSON.stringify({'rating': this.restaurant.rating})
-        };
-        this.$.xhr.request(args);
-      },
-      onResponse: function() {
-        console.log("got server response");
       }
     });
   </script>

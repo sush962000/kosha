@@ -1,20 +1,20 @@
 <link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../kosha-rating/kosha-rating.html">
 
-<polymer-element name="kosha-tile" attributes="restaurant">
+<polymer-element name="kosha-tile" attributes="name rating">
   <template>
     <link rel="stylesheet" href="kosha-tile.css">
     <paper-shadow class="container" z="1">
       <div vertical layout center>
-        <h2>{{restaurant.name}}</h2>
-        <kosha-rating restaurant={{restaurant}}></kosha-rating>
+        <h2>{{name}}</h2>
+        <kosha-rating rating={{rating}} userRated=false></kosha-rating>
       </div>
     </paper-shadow>
   </template>
   <script>
     Polymer('kosha-tile', {
-      created: function() {
-        this.restaurant = {};
+      ratingChanged: function() {
+        this.fire('ratingchange');
       }
     });
   </script>

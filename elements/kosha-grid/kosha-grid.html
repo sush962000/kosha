@@ -1,20 +1,48 @@
 <link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../../bower_components/core-ajax/core-xhr.html">
 <link rel="import" href="../kosha-tile/kosha-tile.html">
 
 <polymer-element name="kosha-grid" attributes="url">
   <template>
     <link rel="stylesheet" href="kosha-grid.css">
-    <core-ajax auto url="{{url}}" handleAs="json" response="{{response}}"></core-ajax>
+    <core-ajax auto url="{{url}}" handleAs="json" on-core-response="{{responseRecieved}}"></core-ajax>
+    <core-xhr id="poster"></core-xhr>
     <div class="container">
-      <template repeat="{{item in response.items}}">
-        <kosha-tile restaurant="{{item}}"></kosha-tile>
+      <template repeat="{{restaurant in restaurants}}">
+        <kosha-tile
+            uuid="{{restaurant.business_id}}"
+            name="{{restaurant.name}}"
+            rating="{{restaurant.rating}}"
+            on-ratingchange="{{ratingChanged}}">
+        </kosha-tile>
       </template>
     </div>
   </template>
   <script>
     Polymer('kosha-grid', {
+      url: '',
       created: function() {
-        this.url = "";
+        this.restaurants = [];
+      },
+      responseRecieved: function(e) {
+        this.restaurants = e.detail.response.items;
+      },
+      ratingPosted: function(e) {
+        console.log(e.type, e.detail);
+        // TODO: Update model.
+      },
+      ratingChanged: function(e) {
+        // Send to server.
+        var restaurant = e.target.templateInstance.model.restaurant;
+        console.log(restaurant.name, restaurant.rating);
+        var args = {
+            'url': '/restaurants/' + restaurant.business_id,
+            'method': 'PATCH',
+            'headers': {'Content-Type': 'application/json'},
+            'body': JSON.stringify({'rating': restaurant.rating}),
+            'callback': this.ratingPosted
+        };
+        this.$.poster.request(args);
       }
     });
   </script>
