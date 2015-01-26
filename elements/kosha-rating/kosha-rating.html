@@ -49,8 +49,11 @@
         this.initParams();
       },
       onTap: function(event) {
+        var new_rating = this.indexToRating(event.target.templateInstance.model.i);
+        if (this.userRated && (new_rating == this.rating))
+          return;
         this.userRated = true;
-        this.rating = this.indexToRating(event.target.templateInstance.model.i);
+        this.rating = new_rating;
         this.initParams();
         this.fire('ratingchange');
       }

@@ -34,35 +34,37 @@ def train_restaurant_data():
     print rmse_train
     print rmse_test
 
+def load(filepath):
+    return gl.SFrame.read_csv(filepath, column_type_hints={"rating":int})
+
 def add_new_data(data, restaurant_id, restaurant, user, rating, X1):
     new_data = gl.SFrame({"restaurant_id":restaurant_id, "restaurant" : restaurant, "user": user, "rating":rating, "X1":X1})
     data.append(new_data)
 
-
-def recommend_for_new_user(data, restaurant_id, restaurant, user, rating, X1):
-    new_data = gl.SFrame({"restaurant_id":restaurant_id, "restaurant" : restaurant, "user": user, "rating":rating, "X1":X1})
+def recommend_for_new_user(restaurant_id, restaurant, rating):
+    data = gl.SFrame.read_csv(filepath, column_type_hints={"rating":int})
+    new_data = gl.SFrame({"restaurant_id":[restaurant_id], "restaurant" : [restaurant], "user": ["sush"], "rating":[rating], "X1":[""]})
     data.append(new_data)
     mf_model = gl.ranking_factorization_recommender.create(data, 'user', 'restaurant', 'rating',
-                                              max_iterations=50, num_factors= 25, regularization= 0.01, verbose = False)
+                                              max_iterations=10, num_factors= 25, regularization= 0.01, verbose = False)
     recommendations = mf_model.recommend(users=["sush"] , k=10, exclude = new_data)
     print recommendations
 
 
 def recommend_by_popularity(data):
-    m = gl.popularity_recommender.create(data, 'user', 'restaurant', 'rating')
-    recommendations = m.recommend(k =10)
-    
-    print recommendations
+    m = gl.popularity_recommender.create(data, 'user', 'name', 'rating', verbose=False)
+    recommendations = m.recommend(k=10)
+
     recommendations_data = recommendations.to_dataframe()
     sorted_data = []
     for index, rows in recommendations_data.iterrows():
-        if index >= 11: break
-        sorted_data.append({"restaurant" : rows["restaurant"], "score" : rows["score"], "rank": rows["rank"], "city" : "Las Vegas", "state" : "NV"})
+        if index >= 25: break
+        sorted_data.append({"name" : rows["name"], "rating" : rows["score"], "rank": rows["rank"]})
     return sorted_data
 
     #(fig, ax) = plt.subplots(figsize=(10, 8))
-    #[p1, p2, p3] = ax.semilogx(regularization_vals, rmse_train, 
-                           #regularization_vals, rmse_test, 
+    #[p1, p2, p3] = ax.semilogx(regularization_vals, rmse_train,
+                           #regularization_vals, rmse_test,
                            #regularization_vals, len(regularization_vals) * [baseline_rmse]
                            #)
     #ax.set_ylim([0.7, 1.1])
@@ -76,20 +78,8 @@ def recommend_by_popularity(data):
 #results = m1.recommend(["Charlie"])
 #print results
 
-def get_recommendations():
-    #train_restaurant_data()
-    filepath = "restaurant_data.csv"
-    data = gl.SFrame.read_csv(filepath, column_type_hints={"rating":int})
-    #train_restaurant_data()
-    #restaurant_id = ["MCVJQFEhWCy-rHXXJS_RAg", "8buIr1zBCO7OEcAQSZko7w"]
-    #restaurant = ["Moko Tapas Bar", "Firefly"]
-    #user = ["sush", "sush"]
-    #rating = [5, 1]
-    #X1 = ["",""]
-    sorted_data = recommend_by_popularity(data)
-    return sorted_data
-    #add_new_data(data, restaurant_id, restaurant, user, rating, X1)
-    #recommend_for_new_user(data, restaurant_id, restaurant, user, rating, X1)
+def get_recommendations(data):
+    return recommend_by_popularity(data)
 
 def main():
     recommendations = get_recommendations()

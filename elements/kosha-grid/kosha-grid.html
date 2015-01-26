@@ -10,7 +10,6 @@
     <div class="container">
       <template repeat="{{restaurant in restaurants}}">
         <kosha-tile
-            uuid="{{restaurant.business_id}}"
             name="{{restaurant.name}}"
             rating="{{restaurant.rating}}"
             on-ratingchange="{{ratingChanged}}">
@@ -36,7 +35,7 @@
         var restaurant = e.target.templateInstance.model.restaurant;
         console.log(restaurant.name, restaurant.rating);
         var args = {
-            'url': '/restaurants/' + restaurant.business_id,
+            'url': '/restaurants/' + restaurant.id,
             'method': 'PATCH',
             'headers': {'Content-Type': 'application/json'},
             'body': JSON.stringify({'rating': restaurant.rating}),

@@ -5,9 +5,7 @@ import json
 app = Flask(__name__)
 app.debug = True
 
-restaurants = []
-with open("business_data.json") as f:
-  restaurants = [json.loads(line) for line in f.readlines()]
+data = recommender.load("restaurant_data.csv")
 
 @app.route("/")
 def main():
@@ -15,17 +13,16 @@ def main():
 
 @app.route("/restaurants", methods=["GET"])
 def api_restaurants():
-  #recommendations = recommender.get_recommendations()
-  recommendations = restaurants
+  recommendations = recommender.get_recommendations(data)
   response = jsonify(items=recommendations)
   response.status_code = 200
   return response
 
-@app.route("/restaurants/<business_id>", methods=["PATCH"])
-def api_post_rating(business_id):
-  print business_id
+@app.route("/restaurants/<id>", methods=["PATCH"])
+def api_post_rating(id):
+  print id
   print request.json
-  #recommender.add_new_data(business_id, user_rating)
+  #recommender.add_new_data(id, rating)
   response = make_response()
   response.status_code = 204
   return response
