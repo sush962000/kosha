@@ -25,6 +25,7 @@ def api_restaurants():
 def api_post_rating(business_id):
   print business_id
   print request.json
+  #recommender.add_new_data(business_id, user_rating)
   response = make_response()
   response.status_code = 204
   return response

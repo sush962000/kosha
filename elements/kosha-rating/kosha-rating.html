@@ -52,6 +52,7 @@
         this.userRated = true;
         this.rating = this.indexToRating(event.target.templateInstance.model.i);
         this.initParams();
+        this.fire('ratingchange');
       }
     });
   </script>
