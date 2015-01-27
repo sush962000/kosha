@@ -20,11 +20,12 @@ def api_restaurants():
 
 @app.route("/restaurants/<id>", methods=["PATCH"])
 def api_post_rating(id):
-  print id
   rating = request.json["rating"]
-  #recommender.add_new_data(id, rating)
-  response = make_response()
-  response.status_code = 204
+  recommendations = recommender.recommend_for_new_user(data, id, rating)
+  #response = make_response()
+  response = jsonify(items=recommendations)
+  response.status_code = 200
+  print response
   return response
 
 if __name__ == "__main__":

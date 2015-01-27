@@ -41,44 +41,34 @@ def add_new_data(data, restaurant_id, restaurant, user, rating, X1):
     new_data = gl.SFrame({"restaurant_id":restaurant_id, "restaurant" : restaurant, "user": user, "rating":rating, "X1":X1})
     data.append(new_data)
 
-def recommend_for_new_user(restaurant_id, restaurant, rating):
-    data = gl.SFrame.read_csv(filepath, column_type_hints={"rating":int})
-    new_data = gl.SFrame({"restaurant_id":[restaurant_id], "restaurant" : [restaurant], "user": ["sush"], "rating":[rating], "X1":[""]})
+def recommend_for_new_user(data, id, rating):
+    name = data[data["id"] == id]["name"][0]
+    new_data = gl.SFrame({"id": [id], "name" : [name], "user": ["sush"], "rating":[rating], "X1":["X1"]})
     data.append(new_data)
-    mf_model = gl.ranking_factorization_recommender.create(data, 'user', 'restaurant', 'rating',
-                                              max_iterations=10, num_factors= 25, regularization= 0.01, verbose = False)
-    recommendations = mf_model.recommend(users=["sush"] , k=10, exclude = new_data)
-    print recommendations
-
+    mf_model = gl.ranking_factorization_recommender.create(data, 'user', 'id', 'rating',
+                                              max_iterations=10, num_factors= 25, regularization= 0.01, verbose = True)
+    model_recommendations = mf_model.recommend(users=["sush"] , k=25, exclude = new_data)
+    recommendations_data = model_recommendations.to_dataframe()
+    recommendations = []
+    for index, rows in recommendations_data.iterrows():
+        id = rows["id"]
+        name = data[data["id"] == id]["name"][0]
+        recommendations.append({"id":id, "name":name, "rating" : rows["score"]})
+    return recommendations
 
 def recommend_by_popularity(data):
     m = gl.popularity_recommender.create(data, 'user', 'id', 'rating', verbose=False)
-    recommendations = m.recommend(k=10)
+    model_recommendations = m.recommend(k=5)
 
-    recommendations_data = recommendations.to_dataframe()
-    sorted_data = []
+    recommendations_data = model_recommendations.to_dataframe()
+    recommendations = []
     for index, rows in recommendations_data.iterrows():
         if index >= 25: break
         id = rows["id"]
         name = data[data["id"] == id]["name"][0]
-        sorted_data.append({"id":id, "name":name, "rating" : rows["score"]})
-    return sorted_data
+        recommendations.append({"id":id, "name":name, "rating" : rows["score"]})
+    return recommendations
 
-    #(fig, ax) = plt.subplots(figsize=(10, 8))
-    #[p1, p2, p3] = ax.semilogx(regularization_vals, rmse_train,
-                           #regularization_vals, rmse_test,
-                           #regularization_vals, len(regularization_vals) * [baseline_rmse]
-                           #)
-    #ax.set_ylim([0.7, 1.1])
-    #ax.set_xlabel('Regularization', fontsize=20)
-    #ax.set_ylabel('RMSE', fontsize=20)
-    #ax.legend([p1, p2, p3], ["Train", "Test", "Baseline"])
-
-
-#model = gl.factorization_recommender.create(data, user_id="user", item_id="restaurant", target="rating")
-#results = model.recommend(users=None, k=5)
-#results = m1.recommend(["Charlie"])
-#print results
 
 def get_recommendations(data):
     return recommend_by_popularity(data)

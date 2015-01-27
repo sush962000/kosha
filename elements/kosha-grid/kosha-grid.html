@@ -26,11 +26,8 @@
       responseRecieved: function(e) {
         this.restaurants = e.detail.response.items;
       },
-      ratingPosted: function(event, detail, sender) {
-        console.log(detail);
-        // TODO: Update model.
-      },
       ratingChanged: function(e) {
+        var that = this;
         // Send to server.
         var restaurant = e.target.templateInstance.model.restaurant;
         var args = {
@@ -38,7 +35,10 @@
             'method': 'PATCH',
             'headers': {'Content-Type': 'application/json;charset=utf-8'},
             'body': JSON.stringify({rating: restaurant.rating}),
-            'callback': this.ratingPosted
+            'callback': function(responseText) {
+              response = JSON.parse(responseText);
+              that.restaurants = response.items;
+            }
         };
         this.$.poster.request(args);
       }
