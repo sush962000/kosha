@@ -1,6 +1,8 @@
 import graphlab as gl
 import pandas as pd
 
+MAX_COUNT = 30
+
 def train_restaurant_data():
     #import matplotlib.pyplot as plt
 
@@ -37,17 +39,19 @@ def train_restaurant_data():
 def load(filepath):
     return gl.SFrame.read_csv(filepath, column_type_hints={"rating":int})
 
-def add_new_data(data, restaurant_id, restaurant, user, rating, X1):
-    new_data = gl.SFrame({"restaurant_id":restaurant_id, "restaurant" : restaurant, "user": user, "rating":rating, "X1":X1})
-    data.append(new_data)
-
-def recommend_for_new_user(data, id, rating):
+def add_rating(data, id, user, rating):
     name = data[data["id"] == id]["name"][0]
-    new_data = gl.SFrame({"id": [id], "name" : [name], "user": ["sush"], "rating":[rating], "X1":["X1"]})
-    data.append(new_data)
-    mf_model = gl.ranking_factorization_recommender.create(data, 'user', 'id', 'rating',
-                                              max_iterations=10, num_factors= 25, regularization= 0.01, verbose = True)
-    model_recommendations = mf_model.recommend(users=["sush"] , k=25, exclude = new_data)
+    new_rating = gl.SFrame({"id": [id], "name" : [name], "user": [user], "rating":[rating], "X1":["X1"]})
+    return data.append(new_rating)
+
+def get_rating(data, id, user):
+    return 3
+
+def recommend_for_user(data, user, max_count=MAX_COUNT):
+    mf_model = gl.ranking_factorization_recommender.create(
+        data, 'user', 'id', 'rating',
+        max_iterations=10, num_factors=25, regularization=0.01, verbose=True)
+    model_recommendations = mf_model.recommend(users=[user], k=max_count)
     recommendations_data = model_recommendations.to_dataframe()
     recommendations = []
     for index, rows in recommendations_data.iterrows():
@@ -56,26 +60,22 @@ def recommend_for_new_user(data, id, rating):
         recommendations.append({"id":id, "name":name, "rating" : rows["score"]})
     return recommendations
 
-def recommend_by_popularity(data):
+def recommend_by_popularity(data, max_count=MAX_COUNT):
     m = gl.popularity_recommender.create(data, 'user', 'id', 'rating', verbose=False)
     model_recommendations = m.recommend(k=5)
 
     recommendations_data = model_recommendations.to_dataframe()
     recommendations = []
     for index, rows in recommendations_data.iterrows():
-        if index >= 25: break
+        if index >= max_count: break
         id = rows["id"]
         name = data[data["id"] == id]["name"][0]
         recommendations.append({"id":id, "name":name, "rating" : rows["score"]})
     return recommendations
 
-
-def get_recommendations(data):
-    return recommend_by_popularity(data)
-
 def main():
     data = load("restaurant_data.csv")
-    recommendations = get_recommendations(data)
+    recommendations = recommend_by_popularity(data)
     print recommendations
 
 if __name__ == '__main__':
