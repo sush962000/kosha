@@ -1,13 +1,12 @@
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, json, jsonify, make_response, request, session
 #import recommender
-import json
+from uuid import uuid4
 
 app = Flask(__name__)
 app.debug = True
+app.secret_key = 'development key'
 
 #data = recommender.load("restaurant_data.csv")
-with open('restaurant_data.json') as f:
-  restaurants = [json.loads(line) for line in f.readlines()]
 
 class Data:
   def __init__(self):
@@ -26,10 +25,14 @@ data = Data()
 
 @app.route("/")
 def main():
+  if not "id" in session:
+    session["id"] = str(uuid4())
+    print session["id"]
   return app.send_static_file("index.html")
 
 @app.route("/restaurants", methods=["GET"])
 def api_restaurants():
+  print session["id"]
   #recommendations = recommender.get_recommendations(data)
   recommendations = data.filter(name=request.args.get('name'), count=30)
   response = jsonify(items=recommendations)
@@ -38,6 +41,7 @@ def api_restaurants():
 
 @app.route("/restaurants/<id>", methods=["PATCH"])
 def api_post_rating(id):
+  print session["id"]
   rating = request.json["rating"]
   print id
   print rating
