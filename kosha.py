@@ -1,7 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, make_response, request
 #import recommender
 import json
-import random
 
 app = Flask(__name__)
 app.debug = True
@@ -23,12 +22,7 @@ class Data:
     if count and len(restaurants) > count:
       restaurants = restaurants[0 : count]
     return restaurants
-  def randomN(self):
-    sample = random.sample(self.restaurants[0:16], 15)
-    sample.sort(key=lambda restaurant: restaurant['rating'])
-    return sample
 data = Data()
-
 
 @app.route("/")
 def main():
@@ -45,10 +39,11 @@ def api_restaurants():
 @app.route("/restaurants/<id>", methods=["PATCH"])
 def api_post_rating(id):
   rating = request.json["rating"]
+  print id
+  print rating
   #recommendations = recommender.recommend_for_new_user(data, id, rating)
-  recommendations = data.randomN()
-  response = jsonify(items=recommendations)
-  response.status_code = 200
+  response = make_response()
+  response.status_code = 204
   return response
 
 if __name__ == "__main__":
