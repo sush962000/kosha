@@ -10,6 +10,9 @@
   html, body {
     font-family: 'RobotoDraft', sans-serif;
   }
+  #search-box {
+    margin-left: 48px;
+  }
 </style>
 
 <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
@@ -17,22 +20,25 @@
 <link rel="import" href="bower_components/font-roboto/roboto.html">
 <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
 <link rel="import" href="bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="bower_components/core-input/core-input.html">
 <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="elements/elements.html">
 </head>
 
 <body fullbleed layout vertical unresolved>
+<template is="auto-binding">
   <core-header-panel flex>
     <core-toolbar>
       <core-icon icon="store"></core-icon>
-      <div flex>Kosha</div>
-      <core-icon-button icon="search"></core-icon-button>
-      <core-icon-button icon="account-box"></core-icon-button>
+      <div>Kosha</div>
+      <input id="search-box" is="core-input" flex placeholder="filter" committedvalue="{{filter}}">
+      <core-icon-button icon="refresh"></core-icon-button>
       <core-icon-button icon="more-vert"></core-icon-button>
     </core-toolbar>
-    <kosha-grid url="/restaurants"></kosha-grid>
+    <kosha-grid url="/restaurants" filter="{{filter}}"></kosha-grid>
     <!-- <kosha-rating value=2></kosha-rating> -->
   </core-header-panel>
+</template>
 </body>
 
 </html>

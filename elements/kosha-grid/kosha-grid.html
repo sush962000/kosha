@@ -2,10 +2,15 @@
 <link rel="import" href="../../bower_components/core-ajax/core-xhr.html">
 <link rel="import" href="../kosha-tile/kosha-tile.html">
 
-<polymer-element name="kosha-grid" attributes="url">
+<polymer-element name="kosha-grid" attributes="url filter">
   <template>
     <link rel="stylesheet" href="kosha-grid.css">
-    <core-ajax auto url="{{url}}" handleAs="json" on-core-response="{{responseRecieved}}"></core-ajax>
+    <core-ajax id="getter"
+        auto
+        url="{{url}}"
+        handleAs="json"
+        on-core-response="{{responseRecieved}}">
+    </core-ajax>
     <core-xhr id="poster"></core-xhr>
     <div class="container">
       <template repeat="{{restaurant in restaurants}}">
@@ -20,6 +25,7 @@
   <script>
     Polymer('kosha-grid', {
       url: '',
+      filter: '',
       created: function() {
         this.restaurants = [];
       },
@@ -41,6 +47,12 @@
             }
         };
         this.$.poster.request(args);
+      },
+      filterChanged: function() {
+        var params = {
+            name: this.filter
+        };
+        this.$.getter.params = params;
       }
     });
   </script>
