@@ -12,13 +12,12 @@ recommender = Recommender(
 
 @app.route("/")
 def main():
-  if not "user_id" in session:
-    user_id = str(uuid4())
-    session["user_id"] = user_id
   return app.send_static_file("index.html")
 
 @app.route("/restaurants", methods=["GET"])
 def api_restaurants():
+  if not "user_id" in session:
+    session["user_id"] = str(uuid4())
   top_items = recommender.recommend(
       user_id=session["user_id"],
       name_filter=request.args.get('name'))

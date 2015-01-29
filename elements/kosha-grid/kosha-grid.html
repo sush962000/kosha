@@ -16,6 +16,7 @@
       <template repeat="{{restaurant in restaurants}}">
         <kosha-tile
             name="{{restaurant.name}}"
+            cuisine="{{restaurant.cuisine}}"
             rating="{{restaurant.rating}}"
             on-ratingchange="{{ratingChanged}}">
         </kosha-tile>

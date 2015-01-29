@@ -62,8 +62,9 @@ class Recommender:
     recommendations = []
     for index, item_id in enumerate(top_items['item_id']):
       name = self.item_data[self.item_data['item_id'] == item_id]['name'][0]
+      cuisine = self.item_data[self.item_data['item_id'] == item_id]['cuisine'][0]
       rating = top_items['score'][index]
-      recommendations.append({'id':item_id, 'name':name, 'rating': rating})
+      recommendations.append({'id':item_id, 'name':name, 'cuisine':cuisine, 'rating':rating})
     return recommendations
 
 def train_restaurant_data():
