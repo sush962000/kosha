@@ -1,7 +1,65 @@
 import graphlab as gl
 import pandas as pd
 
-MAX_COUNT = 30
+class Recommender:
+  def __init__(self, observation_data_filepath, item_data_filepath):
+    self.observation_data = gl.SFrame.read_csv(observation_data_filepath)
+    self.item_data = gl.SFrame.read_csv(item_data_filepath)
+    self.new_observation_data = gl.SFrame({'user_id': [], 'item_id': [], 'rating': []})
+
+    self.popularity_recommender = gl.popularity_recommender.create(
+        observation_data,
+        target='rating',
+        verbose=True)
+    self.ranking_factorization_recommender = gl.ranking_factorization_recommender.create(
+        observation_data,
+        target='rating',
+        num_factors=25,
+        regularization=0.01,
+        max_iterations=10,
+        verbose=True)
+
+  def add_rating(self, user_id, item_id, rating):
+    row = gl.SFrame({
+        'user_id': [user_id],
+        'item_id': [item_id],
+        'rating': [rating]
+    })
+    self.new_observation_data.append(row)
+
+  def recommend(self, user_id, max_count=30, name_filter=None):
+    recommender = self.popularity_recommender if self.__is_new_user(user_id) else self.ranking_factorization_recommender
+    top_items = recommender.recommend(
+        users=[user_id],
+        k=max_count,
+        items=__filter_items() if name_filter else None,
+        new_observation_data=new_observation_data,
+        verbose=True)
+    return __to_json(top_items)
+
+  def __is_existing_user(self, user_id):
+    # Returns True if the given user has rated at least one restaurant.
+    return __has_user(self.new_observation_data) #or __has_user(self.observation_data)
+
+  def __has_user(observation_data, user_id):
+    # Returns True if the observation_data has the given user_id.
+    return observation_data[observation_data['user_id'] == user_id]['user_id'].size() != 0
+
+  def __filter_items(self, name_filter):
+    # Returns an item_id SArray that satisfies the given filter.
+    lower_name = name_filter.lower()
+    filtered_sf = self.item_data[lower_name in self.item_data['name'].lower()]
+    return filtered_sf['item_id']
+
+  def __to_json(self, recommendation_sf):
+    recommendation_df = recommendation_sf.to_dataframe()
+    recommendations = []
+    for row in recommendation_df.iterrows():
+        item_id = row['item_id']
+        name = self.item_data[self.item_data['item_id'] == item_id]['name'][0]
+        rating = row['score']
+        recommendations.append({'id':item_id, 'name':name, 'rating': rating})
+    return recommendations
 
 def train_restaurant_data():
     #import matplotlib.pyplot as plt
@@ -47,7 +105,7 @@ def add_rating(data, id, user, rating):
 def get_rating(data, id, user):
     return 3
 
-def recommend_for_user(data, user, max_count=MAX_COUNT):
+def recommend_for_user(data, user, max_count=30):
     mf_model = gl.ranking_factorization_recommender.create(
         data, 'user', 'id', 'rating',
         max_iterations=10, num_factors=25, regularization=0.01, verbose=True)
@@ -60,7 +118,7 @@ def recommend_for_user(data, user, max_count=MAX_COUNT):
         recommendations.append({"id":id, "name":name, "rating" : rows["score"]})
     return recommendations
 
-def recommend_by_popularity(data, max_count=MAX_COUNT):
+def recommend_by_popularity(data, max_count=30):
     m = gl.popularity_recommender.create(data, 'user', 'id', 'rating', verbose=False)
     model_recommendations = m.recommend(k=5)
 
