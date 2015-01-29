@@ -28,7 +28,7 @@ class Recommender:
     self.new_observation_data.append(row)
 
   def recommend(self, user_id, max_count=30, name_filter=None):
-    recommender = self.popularity_recommender if self.__is_new_user(user_id) else self.ranking_factorization_recommender
+    recommender = self.ranking_factorization_recommender if self.__is_existing_user(user_id) else self.popularity_recommender
     top_items = recommender.recommend(
         users=[user_id],
         k=max_count,
