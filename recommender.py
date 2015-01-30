@@ -13,16 +13,13 @@ class Recommender:
         column_type_hints={"rating":int})
     self.item_data = gl.SFrame.read_csv(item_data_filepath)
     self.new_observation_data = None
-    self.popularity_recommender = gl.popularity_recommender.create(
+    #self.popularity_recommender = gl.popularity_recommender.create(
+    #    self.observation_data,
+    #    target='rating',
+    #    verbose=False)
+    self.item_similarity_recommender = gl.item_similarity_recommender.create(
         self.observation_data,
-        target='rating',
-        verbose=False)
-    self.ranking_factorization_recommender = gl.ranking_factorization_recommender.create(
-        self.observation_data,
-        target='rating',
-        num_factors=25,
-        regularization=0.01,
-        max_iterations=10,
+        target="rating",
         verbose=False)
 
   def add_rating(self, user_id, item_id, rating):
@@ -35,8 +32,8 @@ class Recommender:
         self.new_observation_data.append(row) if self.new_observation_data else row
 
   def recommend(self, user_id, max_count=30, name_filter=None):
-    recommender = self.ranking_factorization_recommender \
-        if self.__is_existing_user(user_id) else self.popularity_recommender
+    recommender = self.item_similarity_recommender # \
+        #if self.__is_existing_user(user_id) else self.popularity_recommender
     top_items = recommender.recommend(
         users=[user_id],
         k=max_count,
