@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, request, session
+from flask import Flask, json, jsonify, make_response, request, session
 from recommender import Recommender
 from uuid import uuid4
 
@@ -34,6 +34,15 @@ def api_post_rating(item_id):
       rating=rating)
   response = make_response()
   response.status_code = 204
+  return response
+
+@app.route("/restaurants/dataset/<filename>", methods=["GET"])
+def api_restaurant_dataset(filename):
+  filepath = 'dataset/' + filename
+  with open(filepath) as f:
+    restaurants = [json.loads(line) for line in f.readlines()]
+  response = jsonify(items=restaurants)
+  response.status_code = 200
   return response
 
 if __name__ == "__main__":
