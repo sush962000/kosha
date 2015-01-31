@@ -3,7 +3,7 @@
   height: 180px;
   margin: 10px;
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 30px;
   text-align: center;
 }
 
@@ -13,5 +13,5 @@
 
 .item-category {
   font-style: italic;
-  color: gray;
+  color: #757575;
 }

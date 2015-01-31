@@ -9,6 +9,11 @@
 <style>
   html, body {
     font-family: 'RobotoDraft', sans-serif;
+    background-color: #F8F8F8;
+  }
+  #toolbar {
+    background-color: #F44336;
+    color: #F8F8F8;
   }
   #search-box {
     margin-left: 48px;
@@ -28,7 +33,7 @@
 <body fullbleed layout vertical unresolved>
 <template id="kosha_body" is="auto-binding">
   <core-header-panel flex>
-    <core-toolbar>
+    <core-toolbar id="toolbar">
       <core-icon icon="store"></core-icon>
       <div>Kosha</div>
       <input id="search-box" is="core-input" flex placeholder="filter" committedvalue="{{filter}}">
@@ -37,7 +42,7 @@
     </core-toolbar>
     <kosha-grid id="restaurant_grid" url="/restaurants" filter="{{filter}}"></kosha-grid>
     <!-- <kosha-grid url="/restaurants/dataset/example_1.json"></kosha-grid> -->
-    <!-- <kosha-rating value=2></kosha-rating> -->
+    <!-- <kosha-tile name="Restaurant Name" cuisine="Indian" rating=3></kosha-tile> -->
   </core-header-panel>
 </template>
 <script>

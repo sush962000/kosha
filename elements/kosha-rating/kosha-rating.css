@@ -1,9 +1,9 @@
 .filled-system {
-  color: red;
+  color: #F44336;
 }
 .filled-user {
-  color: gold;
+  color: #FFD740;
 }
 .empty {
-  color: lightgray;
+  color: #E0E0E0;
 }
