@@ -4,12 +4,12 @@
 <polymer-element name="kosha-tile" attributes="name cuisine rating">
   <template>
     <link rel="stylesheet" href="kosha-tile.css">
-    <paper-shadow class="container" z="1">
-      <div vertical layout center>
-        <h3 flex>{{name}}</h3>
-        <h4>{{cuisine}}</h4>
-        <kosha-rating rating={{rating}} userRated=false></kosha-rating>
+    <paper-shadow class="container" z="1" vertical layout center justified>
+      <div>
+        <div class="item-title">{{name}}</div>
+        <div class="item-category">{{cuisine}}</div>
       </div>
+      <kosha-rating rating={{rating}} userRated=false></kosha-rating>
     </paper-shadow>
   </template>
   <script>

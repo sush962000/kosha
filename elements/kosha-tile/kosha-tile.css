@@ -1,5 +1,17 @@
 .container {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   margin: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.item-title {
+  font-size: 1.5em;
+}
+
+.item-category {
+  font-style: italic;
+  color: gray;
 }
