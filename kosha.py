@@ -3,7 +3,6 @@ from recommender import Recommender
 from uuid import uuid4
 
 app = Flask(__name__)
-app.debug = True
 app.secret_key = 'development key'
 
 recommender = Recommender(
@@ -46,4 +45,4 @@ def api_restaurant_dataset(filename):
   return response
 
 if __name__ == "__main__":
-  app.run()
+  app.run('0.0.0.0')
