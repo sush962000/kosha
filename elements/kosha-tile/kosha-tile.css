@@ -1,9 +1,13 @@
 .container {
+  background-color: #FAFAFA;
   width: 160px;
-  height: 160px;
-  margin: 10px;
-  padding-top: 10px;
-  padding-bottom: 30px;
+  height: 200px;
+  margin: 8px;
+  border-radius: 2px;
+}
+
+.item-info {
+  padding: 16px;
   text-align: center;
 }
 
@@ -12,6 +16,17 @@
 }
 
 .item-category {
-  font-style: italic;
+  color: #757575;
+}
+
+.item-rating {
+  padding: 16px;
+}
+
+.more-info {
+  width: 128px;
+  border-top: solid 1px #E0E0E0;
+  padding: 8px;
+  font-size: 0.8em;
   color: #757575;
 }
