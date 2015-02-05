@@ -1,7 +1,7 @@
 .container {
   background-color: #FAFAFA;
   width: 160px;
-  height: 200px;
+  height: 216px;
   margin: 8px;
   border-radius: 2px;
 }
@@ -20,13 +20,6 @@
 }
 
 .item-rating {
-  padding: 16px;
-}
-
-.more-info {
-  width: 128px;
-  border-top: solid 1px #E0E0E0;
-  padding: 8px;
-  font-size: 0.8em;
-  color: #757575;
+  padding-top: 16px;
+  padding-bottom: 32px;
 }
