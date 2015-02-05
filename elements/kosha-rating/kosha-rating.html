@@ -2,12 +2,25 @@
 
 <polymer-element name="kosha-rating" attributes="rating userRated">
   <template>
-    <link rel="stylesheet" href="kosha-rating.css">
-    <div class="container">
+    <style>
+      .kosha-rating-container {
+        cursor: pointer;
+      }
+      .kosha-rating-filled-system {
+        color: #F44336;
+      }
+      .kosha-rating-filled-user {
+        color: #FFD600;
+      }
+      .kosha-rating-empty {
+        color: #E0E0E0;
+      }
+    </style>
+    <div class="kosha-rating-container">
       <template repeat="{{i in ratings}}">
         <core-icon
             icon="grade"
-            class="{{i <= index ? filled : 'empty'}}"
+            class="{{i <= index ? filled : 'kosha-rating-empty'}}"
             on-mouseenter={{onMouseEnter}}
             on-mouseleave={{onMouseLeave}}
             on-tap={{onTap}}>
@@ -20,7 +33,7 @@
       rating: 1,
       userRated: false,
       index: 0, // [0, 4].
-      filled: 'filled-system',
+      filled: 'kosha-rating-filled-system',
       ratingToIndex: function(rating) {
         return Math.round(rating) - 1;
       },
@@ -29,7 +42,8 @@
       },
       initParams: function() {
         this.index = this.ratingToIndex(this.rating);
-        this.filled = this.userRated ? 'filled-user' : 'filled-system';
+        this.filled = this.userRated ?
+            'kosha-rating-filled-user' : 'kosha-rating-filled-system';
       },
       created: function() {
         // Initialize arrays and objects.
@@ -43,7 +57,7 @@
       },
       onMouseEnter: function(event) {
         this.index = event.target.templateInstance.model.i;
-        this.filled = 'filled-user';
+        this.filled = 'kosha-rating-filled-user';
       },
       onMouseLeave: function(event) {
         this.initParams();
