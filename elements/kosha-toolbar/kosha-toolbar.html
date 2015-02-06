@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+<polymer-element name="kosha-toolbar" attribute="query">
+  <template>
+    <style>
+      #searchbar {
+        background-color: #EEEEEE;
+        color: #757575;
+      }
+      #search-box {
+        margin-left: 24px;
+      }
+    </style>
+    <template if="{{searching}}">
+      <core-toolbar id="searchbar">
+        <core-icon-button icon="arrow-back" on-tap="{{exitSearchMode}}"></core-icon-button>
+        <paper-input id="search-box" flex label="search" committedvalue="{{query}}"></paper-input>
+      </core-toolbar>
+    </template>
+    <template if="{{!searching}}">
+      <core-toolbar>
+        <core-icon icon="store"></core-icon>
+        <div flex>Kosha</div>
+        <core-icon-button icon="search" on-tap="{{enterSearchMode}}"></core-icon-button>
+        <core-icon-button icon="more-vert"></core-icon-button>
+      </core-toolbar>
+    </template>
+  </template>
+  <script>
+    Polymer('kosha-toolbar', {
+      searching: false,
+      enterSearchMode: function() {
+        this.searching = true;
+      },
+      exitSearchMode: function() {
+        this.searching = false;
+      }
+    });
+  </script>
+</polymer-element>
