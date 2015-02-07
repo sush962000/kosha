@@ -10,3 +10,9 @@ html /deep/ paper-fab {
   background-color: #F44336;
   color: #EEEEEE;
 }
+
+html core-toolbar a,
+html /deep/ core-toolbar a {
+  text-decoration: none;
+  color: #EEEEEE;
+}
