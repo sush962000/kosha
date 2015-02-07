@@ -13,6 +13,10 @@ recommender = Recommender(
 def main():
   return app.send_static_file("index.html")
 
+@app.route("/favicon.ico")
+def favicon():
+  return app.send_static_file("favicon.ico")
+
 @app.route("/restaurants", methods=["GET"])
 def api_restaurants():
   if not "user_id" in session:
