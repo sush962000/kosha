@@ -1,0 +1,12 @@
+html, body {
+  font-family: 'RobotoDraft', sans-serif;
+  background-color: #EEEEEE;
+}
+
+html core-toolbar,
+html /deep/ core-toolbar,
+html paper-fab,
+html /deep/ paper-fab {
+  background-color: #F44336;
+  color: #EEEEEE;
+}
