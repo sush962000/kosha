@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<title>kosha</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+<style>
+  #slides {
+  }
+</style>
+
+<script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+<link rel="import" href="bower_components/font-roboto/roboto.html">
+<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="elements/kosha-toolbar/kosha-toolbar.html">
+</head>
+
+<body fullbleed layout vertical unresolved>
+  <core-header-panel flex>
+    <kosha-toolbar></kosha-toolbar>
+    <iframe id="slides"
+      src="https://docs.google.com/presentation/d/1ft98_PWUXqiYGBnI9-YHqc1BD2BFuIChDxBSjbAo_4w/embed?start=false&loop=false&delayms=3000"
+      frameborder="0"
+      width="960" height="569"
+      allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
+    </iframe>
+  </core-header-panel>
+</body>
+
+</html>

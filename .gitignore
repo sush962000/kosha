@@ -3,4 +3,5 @@
 *.sublime-workspace
 
 bower_components
+static/about.html
 static/index.html

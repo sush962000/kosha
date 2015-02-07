@@ -13,6 +13,10 @@ recommender = Recommender(
 def main():
   return app.send_static_file("index.html")
 
+@app.route("/about")
+def about():
+  return app.send_static_file("about.html")
+
 @app.route("/favicon.ico")
 def favicon():
   return app.send_static_file("favicon.ico")

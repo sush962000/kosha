@@ -1,7 +1,7 @@
 OBJ_DIR=static
 BOWER_COMP_DIR=bower_components
 POLYMER_ELEM_DIR=elements
-HTML_SRCS=index.html
+HTML_SRCS=about.html index.html
 
 bower_srcs=$(shell find $(BOWER_COMP_DIR) -type f -name '*')
 element_srcs=$(shell find $(POLYMER_ELEM_DIR) -type f -name '*')
