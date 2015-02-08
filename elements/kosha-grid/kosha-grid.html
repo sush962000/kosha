@@ -4,6 +4,11 @@
 
 <polymer-element name="kosha-grid" attributes="url filter">
   <template>
+    <style>
+      #kosha-grid-tile-container {
+        padding: 16px 32px 56px 32px;
+      }
+    </style>
     <core-ajax id="getter"
         auto
         url="{{url}}"
@@ -11,7 +16,7 @@
         on-core-response="{{responseRecieved}}">
     </core-ajax>
     <core-xhr id="poster"></core-xhr>
-    <div layout horizontal wrap>
+    <div id="kosha-grid-tile-container" layout horizontal wrap>
       <template repeat="{{restaurant in restaurants}}">
         <kosha-tile
             name="{{restaurant.name}}"
