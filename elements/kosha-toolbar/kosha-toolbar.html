@@ -2,7 +2,7 @@
 <link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
-<polymer-element name="kosha-toolbar" attribute="query">
+<polymer-element name="kosha-toolbar" attributes="query">
   <template>
     <style>
       #searchbar {
@@ -31,12 +31,16 @@
   <script>
     Polymer('kosha-toolbar', {
       searching: false,
+      query: '',
       enterSearchMode: function() {
         this.searching = true;
       },
       exitSearchMode: function() {
         this.searching = false;
-      }
+      },
+      queryChanged: function() {
+        this.searching = !!this.query;
+      },
     });
   </script>
 </polymer-element>
