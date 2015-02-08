@@ -2,7 +2,7 @@
 <link rel="import" href="../../bower_components/core-ajax/core-xhr.html">
 <link rel="import" href="../kosha-tile/kosha-tile.html">
 
-<polymer-element name="kosha-grid" attributes="url filter">
+<polymer-element name="kosha-grid" attributes="url query">
   <template>
     <style>
       #kosha-grid-tile-container {
@@ -30,7 +30,7 @@
   <script>
     Polymer('kosha-grid', {
       url: '',
-      filter: '',
+      query: '',
       created: function() {
         this.restaurants = [];
       },
@@ -51,11 +51,8 @@
         };
         this.$.poster.request(args);
       },
-      filterChanged: function() {
-        var params = {
-            "name": this.filter
-        };
-        this.$.getter.params = params;
+      queryChanged: function() {
+        this.$.getter.params = { "q": this.query };
       }
     });
   </script>

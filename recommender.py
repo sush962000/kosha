@@ -31,13 +31,13 @@ class Recommender:
     self.new_observation_data = \
         self.new_observation_data.append(row) if self.new_observation_data else row
 
-  def recommend(self, user_id, max_count=30, name_filter=None):
+  def recommend(self, user_id, max_count=30, query=None):
     recommender = self.item_similarity_recommender # \
         #if self.__is_existing_user(user_id) else self.popularity_recommender
     top_items = recommender.recommend(
         users=[user_id],
         k=max_count,
-        items=self.__filter_items(name_filter) if name_filter else None,
+        items=self.__filter_items(query) if query else None,
         new_observation_data=self.new_observation_data,
         verbose=False)
     return self.__to_json(top_items)
@@ -46,14 +46,13 @@ class Recommender:
     # Returns True if the given user has rated at least one restaurant.
     return _has_user(self.new_observation_data, user_id) #or has_user(self.observation_data)
 
-  def __filter_items(self, name_filter):
+  def __filter_items(self, query):
     # Returns an item_id SArray that satisfies the given filter.
     item_ids = []
-    lower_name = name_filter.lower().encode('utf-8')
-    for index, name in enumerate(self.item_data['name']):
-      if lower_name in name.lower():
-        item_ids.append(self.item_data['item_id'][index])
-    return item_ids
+    query = query.lower().encode('utf-8')
+    name_filter = self.item_data['name'].apply(lambda x: query in x.lower())
+    cuisine_filter = self.item_data['cuisine'].apply(lambda x: query in x.lower())
+    return self.item_data[name_filter | cuisine_filter]['item_id']
 
   def __to_json(self, top_items):
     recommendations = []

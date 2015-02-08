@@ -29,7 +29,7 @@
 <template id="kosha_body" is="auto-binding">
   <core-header-panel flex>
     <kosha-toolbar query="{{query}}"></kosha-toolbar>
-    <kosha-grid id="restaurant_grid" url="/restaurants" filter="{{query}}"></kosha-grid>
+    <kosha-grid id="restaurant_grid" url="/restaurants" query="{{query}}"></kosha-grid>
     <!-- <kosha-grid url="/restaurants/dataset/example_1.json"></kosha-grid> -->
     <paper-fab id="refresh-button" z="4" icon="refresh" on-tap="{{refreshGrid}}"></paper-fab>
   </core-header-panel>

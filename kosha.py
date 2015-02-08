@@ -27,7 +27,7 @@ def api_restaurants():
     session["user_id"] = str(uuid4())
   top_items = recommender.recommend(
       user_id=session["user_id"],
-      name_filter=request.args.get('name'))
+      query=request.args.get('q'))
   response = jsonify(items=top_items)
   response.status_code = 200
   return response
