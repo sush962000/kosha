@@ -6,17 +6,28 @@ def _has_user(observation_data, user_id):
     return False
   return user_id in observation_data['user_id']
 
-def _user_rating(item_id, user_id, observation_data):
-  if not observation_data:
+def _user_rating(item_id, user_observation_data):
+  if not user_observation_data:
     return None
-  user_observation_data = observation_data[
-      (observation_data['item_id'] == item_id) &
-      (observation_data['user_id'] == user_id)
-  ]
-  num_rows = user_observation_data.num_rows()
+  user_ratings = user_observation_data[user_observation_data['item_id'] == item_id]
+  num_rows = user_ratings.num_rows()
   if not num_rows:
     return None
-  return user_observation_data['rating'][num_rows - 1]
+  return user_ratings['rating'][num_rows - 1]
+
+def _to_json(items, user_id, item_data, user_observation_data):
+  recommendations = []
+  for index, item_id in enumerate(items['item_id']):
+    item_data_row = item_data[item_data['item_id'] == item_id]
+    name = item_data_row['name'][0]
+    cuisine = item_data_row['cuisine'][0]
+    user_rated = True
+    rating = _user_rating(item_id, user_observation_data)
+    if not rating:
+      user_rated = False
+      rating = items['score'][index]
+    recommendations.append({'id':item_id, 'name':name, 'cuisine':cuisine, 'rating':rating, 'userRated':user_rated})
+  return recommendations
 
 class Recommender:
   def __init__(self, observation_data_filepath, item_data_filepath):
@@ -24,7 +35,7 @@ class Recommender:
         observation_data_filepath,
         column_type_hints={"rating":int})
     self.item_data = gl.SFrame.read_csv(item_data_filepath)
-    self.new_observation_data = None
+    self.new_observation_data = {}
     #self.popularity_recommender = gl.popularity_recommender.create(
     #    self.observation_data,
     #    target='rating',
@@ -40,20 +51,25 @@ class Recommender:
         'item_id': [item_id],
         'rating': [rating]
     })
-    self.new_observation_data = \
-        self.new_observation_data.append(row) if self.new_observation_data else row
+    user_observation_data = self.new_observation_data.get(user_id)
+    if user_observation_data:
+      user_observation_data = user_observation_data.append(row)
+    else:
+      user_observation_data = row
+    self.new_observation_data[user_id] = user_observation_data
 
   def recommend(self, user_id, max_count=30, query=None):
     recommender = self.item_similarity_recommender # \
         #if self.__is_existing_user(user_id) else self.popularity_recommender
+    user_observation_data = self.new_observation_data.get(user_id)
     top_items = recommender.recommend(
         users=[user_id],
         k=max_count,
         items=self.__filter_items(query) if query else None,
-        new_observation_data=self.new_observation_data,
+        new_observation_data=user_observation_data,
         exclude_known=False if query else True,
         verbose=False)
-    return self.__to_json(top_items)
+    return _to_json(top_items, user_id, self.item_data, user_observation_data)
 
   def __is_existing_user(self, user_id):
     # Returns True if the given user has rated at least one restaurant.
@@ -66,27 +82,6 @@ class Recommender:
     name_filter = self.item_data['name'].apply(lambda x: query in x.lower())
     cuisine_filter = self.item_data['cuisine'].apply(lambda x: query in x.lower())
     return self.item_data[name_filter | cuisine_filter]['item_id']
-
-  def __to_json(self, top_items):
-    recommendations = []
-    for index, item_id in enumerate(top_items['item_id']):
-      item_data = self.item_data[self.item_data['item_id'] == item_id]
-      name = item_data['name'][0]
-      cuisine = item_data['cuisine'][0]
-      user_id = top_items['user_id'][index]
-      user_rated = True
-      rating = _user_rating(item_id, user_id, self.new_observation_data)
-      if not rating:
-        user_rated = False
-        rating = top_items['score'][index]
-      recommendations.append({
-          'id': item_id,
-          'name': name,
-          'cuisine': cuisine,
-          'rating': rating,
-          'userRated': user_rated
-      })
-    return recommendations
 
 def train_restaurant_data():
     #import matplotlib.pyplot as plt
