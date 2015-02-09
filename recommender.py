@@ -6,6 +6,18 @@ def _has_user(observation_data, user_id):
     return False
   return user_id in observation_data['user_id']
 
+def _user_rating(item_id, user_id, observation_data):
+  if not observation_data:
+    return None
+  user_observation_data = observation_data[
+      (observation_data['item_id'] == item_id) &
+      (observation_data['user_id'] == user_id)
+  ]
+  num_rows = user_observation_data.num_rows()
+  if not num_rows:
+    return None
+  return user_observation_data['rating'][num_rows - 1]
+
 class Recommender:
   def __init__(self, observation_data_filepath, item_data_filepath):
     self.observation_data = gl.SFrame.read_csv(
@@ -39,6 +51,7 @@ class Recommender:
         k=max_count,
         items=self.__filter_items(query) if query else None,
         new_observation_data=self.new_observation_data,
+        exclude_known=False if query else True,
         verbose=False)
     return self.__to_json(top_items)
 
@@ -57,10 +70,22 @@ class Recommender:
   def __to_json(self, top_items):
     recommendations = []
     for index, item_id in enumerate(top_items['item_id']):
-      name = self.item_data[self.item_data['item_id'] == item_id]['name'][0]
-      cuisine = self.item_data[self.item_data['item_id'] == item_id]['cuisine'][0]
-      rating = top_items['score'][index]
-      recommendations.append({'id':item_id, 'name':name, 'cuisine':cuisine, 'rating':rating})
+      item_data = self.item_data[self.item_data['item_id'] == item_id]
+      name = item_data['name'][0]
+      cuisine = item_data['cuisine'][0]
+      user_id = top_items['user_id'][index]
+      user_rated = True
+      rating = _user_rating(item_id, user_id, self.new_observation_data)
+      if not rating:
+        user_rated = False
+        rating = top_items['score'][index]
+      recommendations.append({
+          'id': item_id,
+          'name': name,
+          'cuisine': cuisine,
+          'rating': rating,
+          'userRated': user_rated
+      })
     return recommendations
 
 def train_restaurant_data():

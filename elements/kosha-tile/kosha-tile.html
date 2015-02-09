@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../kosha-rating/kosha-rating.html">
 
-<polymer-element name="kosha-tile" attributes="name cuisine rating">
+<polymer-element name="kosha-tile" attributes="name cuisine rating userRated">
   <template>
     <style>
       .kosha-tile-container {
@@ -34,7 +34,7 @@
       <kosha-rating
           class="kosha-tile-item-rating"
           rating={{rating}}
-          userRated=false>
+          userRated={{userRated}}>
       </kosha-rating>
     </paper-shadow>
   </template>
