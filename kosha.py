@@ -6,8 +6,8 @@ app = Flask(__name__)
 app.secret_key = 'development key'
 
 recommender = Recommender(
-    observation_data_filepath="observation_data.csv",
-    item_data_filepath="item_data.csv")
+    observation_data_filepath="dataset/observation_data.csv",
+    item_data_filepath="dataset/item_data.csv")
 
 @app.route("/")
 def main():
